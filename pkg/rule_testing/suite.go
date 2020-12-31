@@ -1,10 +1,17 @@
 package rule_testing
 
-import "github.com/wojnosystems/k8s-update-checker/pkg/k8s"
-import testifySuite "github.com/stretchr/testify/suite"
+import (
+	"context"
+	testifySuite "github.com/stretchr/testify/suite"
+	"time"
+)
 
-type Suite struct {
+type TestSuite struct {
 	testifySuite.Suite
-	SetUp    func(p k8s.Type) (err error)
-	TearDown func(p k8s.Type) (err error)
+}
+
+func (suite *TestSuite) WithContext(callback func(ctx context.Context)) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	callback(ctx)
 }
